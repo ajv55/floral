@@ -5,6 +5,8 @@ import Welcome from "./components/welcome";
 import Specialities from "./components/mainPage/specialties";
 import Why from "./components/mainPage/why";
 import How from "./components/mainPage/how";
+import Offer from "./components/mainPage/offer";
+import Footer from "./components/mainPage/footer";
 
 export default function Home() {
   return (
@@ -15,6 +17,8 @@ export default function Home() {
       <Specialities />
       <Why />
       <How />
+      <Offer />
+      <Footer />
     </div>
   );
 }

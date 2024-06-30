@@ -2,9 +2,9 @@ import React from 'react';
 
 const How = () => {
   return (
-    <section className="bg-white py-12">
+    <section style={{backgroundImage: 'linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url("/floral.jpg")'}} className="bg-white bg-cover bg-center py-12">
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold text-center mb-8">How to Order</h2>
+        <h2 className="text-7xl font-bold text-center  bg-gradient-to-br from-amber-400 via-pink-300 to-fuchsia-400 bg-clip-text text-transparent mb-28">How to Order</h2>
         <div className="flex flex-col lg:flex-row lg:space-x-8 space-y-8 lg:space-y-0">
           {/* Step 1 */}
           <div className="flex-1 bg-gray-100 p-6 rounded-lg shadow-lg">
