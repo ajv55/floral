@@ -2,6 +2,7 @@
 import Image from 'next/image'
 import { motion, useInView, useAnimation } from 'framer-motion';
 import { useEffect, useRef } from 'react';
+import Link from 'next/link';
 
 export default function Gorumet() {
     const ref = useRef(null);
@@ -24,9 +25,9 @@ export default function Gorumet() {
                 From classNameic vanilla and rich chocolate to seasonal specials like pumpkin spice and peppermint, we have something for every palate.
                 </p>
                 <div className=' h-16 flex justify-end items-end'>
-                  <a href="#" className="mt-4 inline-block bg-pink-600 text-white py-2 px-4 rounded hover:bg-pink-700">
+                  <Link href="/cupcakes" className="mt-4 inline-block bg-pink-600 text-white py-2 px-4 rounded hover:bg-pink-700">
                   Order Now
-                  </a>
+                  </Link>
                 </div>
             </div>
             </motion.div>

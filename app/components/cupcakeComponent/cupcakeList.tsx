@@ -1,44 +1,76 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-
-const cupcakeData = [
-  { id: '1', name: 'Vanilla Cupcake', price: 2.5, quantity: 50 },
-  { id: '2', name: 'Chocolate Cupcake', price: 3.0, quantity: 60 },
-  // ... add more cupcake data here
-];
+import Image from 'next/image';
+import axios from 'axios';
 
 const CupcakeList = () => {
 
-  const [searchTerm, setSearchTerm] = useState('');
-  const [cupcakes, setCupcakes] = useState([]);
-  const filteredCupcakes = cupcakeData.filter(cupcake =>
-    cupcake.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+    const [search, setSearch] = useState('');
+    const [filter, setFilter] = useState('');
+    const [cupcakes, setCakecups] = useState([]);
 
+    const fetchCupcakes = async () => {
+        await axios.get('/api/getCupcakes').then((res: any) => {
+            if(res.status === 201){
+                setCakecups(res?.data)
+            }
+        })
+    }
 
+    useEffect(() => {
+        fetchCupcakes();
+    }, [])
+
+    
+
+    const flavors = cupcakes.map((product: any) => product?.name);
+    
+    const filteredProducts = cupcakes.filter((product: any) => {
+      return (
+        product?.name.toLowerCase().includes(search.toLowerCase()) &&
+        (filter ? product?.name === filter : true)
+      );
+    });
 
   return (
-    <div className="p-8 bg-pink-100">
-      <h2 className="text-2xl font-bold text-pink-500 mb-6">Cupcake List</h2>
-      <input
-        type="text"
-        placeholder="Search for cupcakes..."
-        className="mb-4 p-2 rounded border-2 border-pink-300"
-        value={searchTerm}
-        onChange={e => setSearchTerm(e.target.value)}
-      />
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredCupcakes.map(cupcake => (
+    <div className="min-h-screen bg-[#ffeae3] flex flex-col items-center py-10">
+      <div className="w-full max-w-7xl px-4 mb-8 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0 md:space-x-4">
+        <span>{cupcakes.length} Cupcakes</span>
+        <input
+          type="text"
+          placeholder="Search..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="w-full md:w-1/2 p-2 border border-gray-300 rounded-lg"
+        />
+        <select
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+          className="w-full md:w-1/4 p-2 border border-gray-300 rounded-lg text-[#121481] bg-[#ffeae3] hover:bg-pink-200 focus:ring-pink-500 focus:border-pink-500"
+        >
+          <option value="">All</option>
+          {flavors.map((flavor, index) => (
+            <option key={index} value={flavor}>{flavor}</option>
+          ))}
+        </select>
+      </div>
+      <div className="w-full max-w-7xl px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        {filteredProducts.map((product: any, index) => (
           <motion.div
-            key={cupcake.id}
-            className="bg-white rounded-lg shadow-md p-6"
+            key={index}
+            className="bg-white rounded-lg hover:cursor-pointer hover:shadow-[#121481] hover:shadow-md shadow-lg overflow-hidden transform hover:scale-105 transition-transform"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <h3 className="text-lg font-semibold text-pink-500">{cupcake.name}</h3>
-            <p className="mt-2 text-amber-500">Price: ${cupcake.price}</p>
-            <p className="mt-2 text-amber-500">Quantity: {cupcake.quantity}</p>
+            <Image src={product.img} alt={product.name} width={200} height={200} className="w-full h-48 object-cover" />
+            <div className="p-4">
+              <span className="text-xs font-semibold text-white bg-pink-500 px-2 py-1 rounded-full">{product.tag}</span>
+              <h2 className="text-lg font-semibold text-[#121481] mt-2">{product.name}</h2>
+              <p className="text-gray-600">{product.description}</p>
+              <p className="text-pink-500 font-bold">${product.price.toFixed(2)}</p>
+              <p className="text-gray-500">Quantity: {product.quantity}</p>
+            </div>
           </motion.div>
         ))}
       </div>

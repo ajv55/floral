@@ -7,7 +7,7 @@ import Footer from '../components/mainPage/footer'
 
 export default function Page() {
   return (
-    <div className='w-full'>
+    <div className='w-full relative'>
         <Nav/>
         <CupcakeHero />
         <CupcakeList />
