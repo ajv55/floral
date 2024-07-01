@@ -3,12 +3,15 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { addItem } from '@/app/slices/cartSlice';
 
 const CupcakeList = () => {
 
     const [search, setSearch] = useState('');
     const [filter, setFilter] = useState('');
     const [cupcakes, setCakecups] = useState([]);
+    const dispatch = useDispatch();
 
     const fetchCupcakes = async () => {
         await axios.get('/api/getCupcakes').then((res: any) => {
@@ -32,6 +35,8 @@ const CupcakeList = () => {
         (filter ? product?.name === filter : true)
       );
     });
+
+    console.log(filteredProducts)
 
   return (
     <div className="min-h-screen bg-[#ffeae3] flex flex-col items-center py-10">
@@ -70,6 +75,9 @@ const CupcakeList = () => {
               <p className="text-gray-600">{product.description}</p>
               <p className="text-pink-500 font-bold">${product.price.toFixed(2)}</p>
               <p className="text-gray-500">Quantity: {product.quantity}</p>
+              <button onClick={() => dispatch(addItem(product))} className="bg-pink-500 text-white px-3 py-1 mt-2 rounded-lg hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-500">
+                    Add to Cart
+             </button>
             </div>
           </motion.div>
         ))}

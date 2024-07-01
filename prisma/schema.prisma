@@ -15,9 +15,9 @@ datasource db {
 
 model Order {
   id                String             @id @default(auto()) @map("_id") @db.ObjectId
-  buyerName         String
-  buyerEmail        String
-  buyerPhone        String
+  buyerName         String?
+  buyerEmail        String?
+  buyerPhone        String?
   cupcakes          Cupcake[]
   floralArrangements FloralArrangement[]
   totalAmount       Float
@@ -27,9 +27,9 @@ model Order {
 
 model Cupcake {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  name      String
-  price     Float
-  quantity  Int
+  name      String?
+  price     Float?
+  quantity  Int?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   order     Order?   @relation(fields: [orderId], references: [id])
@@ -38,9 +38,9 @@ model Cupcake {
 
 model FloralArrangement {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  name      String
-  price     Float
-  quantity  Int
+  name      String?
+  price     Float?
+  quantity  Int?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   order     Order?   @relation(fields: [orderId], references: [id])

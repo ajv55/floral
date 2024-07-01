@@ -2,7 +2,7 @@ import React from 'react'
 
 export default function Footer() {
   return (
-    <footer className=" bg-gradient-to-tl from-amber-800 via-pink-600 to-pink-800 text-white py-10">
+    <footer className=" bg-gradient-to-t from-amber-800 via-pink-600 to-pink-700 text-white py-10">
       <div className="max-w-8xl  mx-auto px-4">
         <div className="flex  flex-col md:flex-row justify-between items-center">
           <div className="mb-6  w-[50%] md:mb-0">
