@@ -56,3 +56,8 @@ model FloralList {
   id String @id @default(auto()) @map("_id") @db.ObjectId
   floralList String?
 }
+
+model Pastries {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  pastriesList String?
+  }

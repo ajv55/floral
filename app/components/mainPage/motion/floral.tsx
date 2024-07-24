@@ -2,6 +2,7 @@
 import Image from 'next/image'
 import { motion, useInView, useAnimation } from 'framer-motion';
 import { useEffect, useRef } from 'react';
+import Link from 'next/link';
 
 export default function Floral() {
     const ref = useRef(null);
@@ -23,9 +24,9 @@ export default function Floral() {
             Ideal for gifting or adding a touch of beauty to your home or event.
             </p>
             <div className=' h-28 flex justify-end items-end'>
-             <a href="#" className="mt-4 inline-block bg-pink-600 text-white py-2 px-4 rounded hover:bg-pink-700">
+             <Link href="/floral" className="mt-4 inline-block bg-pink-600 text-white py-2 px-4 rounded hover:bg-pink-700">
              Browse Flowers
-             </a>
+             </Link>
             </div>
         </div>
     </motion.div>

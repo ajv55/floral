@@ -6,30 +6,30 @@ import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { addItem } from '@/app/slices/cartSlice';
 
-const CupcakeList = () => {
+const FloralList = () => {
 
     const [search, setSearch] = useState('');
     const [filter, setFilter] = useState('');
-    const [cupcakes, setCakecups] = useState([]);
+    const [floral, setFloral] = useState([]);
     const dispatch = useDispatch();
 
-    const fetchCupcakes = async () => {
-        await axios.get('/api/getCupcakes').then((res: any) => {
+    const fetchFloral = async () => {
+        await axios.get('/api/getFloral').then((res: any) => {
             if(res.status === 201){
-                setCakecups(res?.data)
+                setFloral(res?.data)
             }
         })
     }
 
     useEffect(() => {
-        fetchCupcakes();
+        fetchFloral();
     }, [])
 
     
 
-    const flavors = cupcakes.map((product: any) => product?.name);
+    const flavors = floral.map((product: any) => product?.name);
     
-    const filteredProducts = cupcakes.filter((product: any) => {
+    const filteredProducts = floral.filter((product: any) => {
       return (
         product?.name.toLowerCase().includes(search.toLowerCase()) &&
         (filter ? product?.name === filter : true)
@@ -41,7 +41,7 @@ const CupcakeList = () => {
   return (
     <div className="min-h-screen bg-[#ffeae3] flex flex-col items-center py-10">
       <div className="w-full max-w-7xl px-4 mb-8 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0 md:space-x-4">
-        <span>{cupcakes.length} Cupcakes</span>
+        <span>{flavors.length} Floral Arrangements</span>
         <input
           type="text"
           placeholder="Search..."
@@ -68,7 +68,7 @@ const CupcakeList = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <Image src={product.img} alt={product.name} width={200} height={200} className="w-full h-48 object-cover" />
+            <Image src={product.image} alt={product.name} width={200} height={200} className="w-full h-48 object-cover" />
             <div className="p-4">
               <span className="text-xs font-semibold text-white bg-pink-500 px-2 py-1 rounded-full">{product.tag}</span>
               <h2 className="text-lg font-semibold text-[#121481] mt-2">{product.name}</h2>
@@ -85,4 +85,4 @@ const CupcakeList = () => {
   );
 };
 
-export default CupcakeList;
+export default FloralList;

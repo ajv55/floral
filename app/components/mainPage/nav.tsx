@@ -18,7 +18,7 @@ const Navigation: React.FC = () => {
 
 
   return (
-    <div className="w-full border-b z-30 border-zinc-950 fixed bg-white flex justify-between items-center p-2">
+    <div className="w-full border-b z-30 border-zinc-600 fixed bg-white flex justify-between items-center p-2">
       <h1 className="text-3xl font-bold">Logo Goes Here</h1>
       <nav className="w-[45%] text-xl flex justify-evenly items-center">
         <Link className="hover:underline hover:text-red-300 underline-offset-4 hover:text-2xl" href="/" passHref>
@@ -49,9 +49,9 @@ const Navigation: React.FC = () => {
           )}
         </motion.button>
       </nav>
-      <button className="w-[14%] text-2xl px-2.5 text-white rounded-2xl py-3 text-center bg-gradient-to-br from-red-900 via-pink-700 to-red-400 hover:from-red-400 hover:via-pink-600 hover:to-pink-800">
-        Place Order
-      </button>
+      <Link href='/cupcakes' className="w-[13%] text-xl px-2 text-white rounded-2xl py-2.5 text-center bg-gradient-to-br from-pink-500 via-rose-400 to-[#121481] hover:from-[#FFEAE3] hover:via-rose-300 hover:to-pink-600">
+          Place Order
+        </Link>
       <Cart  />
     </div>
   );

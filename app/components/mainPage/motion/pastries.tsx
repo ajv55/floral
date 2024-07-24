@@ -24,7 +24,7 @@ export default function Pastries() {
             Perfect for breakfast, a coffee break, or dessert.
             </p>
             <div className=' h-28 flex justify-end items-end'>
-              <Link href="/cupcakes" className="mt-4 inline-block bg-pink-600 text-white py-2 px-4 rounded hover:bg-pink-700">
+              <Link href="/pastries" className="mt-4 inline-block bg-pink-600 text-white py-2 px-4 rounded hover:bg-pink-700">
               Shop Pastries
               </Link>
             </div>

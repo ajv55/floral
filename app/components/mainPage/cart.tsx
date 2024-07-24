@@ -18,8 +18,11 @@ const Cart: React.FC = () => {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
 
-  const handleQuantityChange = (item: any, newQuantity: number) => {
-    dispatch(updateQuantity({ id: item.id, quantity: newQuantity }));
+  const handleQuantityChange = (item: any, newQuantity: string) => {
+    // Allow user to input a number or clear the input
+    if (newQuantity === '' || (!isNaN(Number(newQuantity)) && Number(newQuantity) >= 0)) {
+      dispatch(updateQuantity({ id: item.id, quantity: newQuantity === '' ? 0 : Number(newQuantity) }));
+    }
   };
 
   const handleRemove = (id: string) => {
@@ -72,7 +75,7 @@ const Cart: React.FC = () => {
                     <li key={item.id} className="mb-4">
                       <div className="flex justify-between items-center">
                         <span className="text-gray-700">{item.name}</span>
-                        <span className="text-pink-500 font-bold">${(item.price * item.quantity).toFixed(2)}</span>
+                        <span className="text-pink-500 font-bold">${(item.price * item.quantity).toFixed(2)  || 0}</span>
                         {/* Quantity selection */}
                         <div className="flex items-center mt-2">
                           <label className="mr-2">Quantity:</label>
@@ -80,8 +83,7 @@ const Cart: React.FC = () => {
                             type="number"
                             value={item.quantity} // Bind to item's quantity in Redux store
                             onChange={(e) => {
-                              const newQuantity = parseInt(e.target.value);
-                              handleQuantityChange(item, newQuantity);
+                              handleQuantityChange(item, e.target.value);
                             }}
                             className="border border-gray-300 rounded-lg p-1 w-16 text-center"
                           />
@@ -97,7 +99,7 @@ const Cart: React.FC = () => {
                   ))}
                 </ul>
                 <div className="mt-4">
-                  <h3 className="text-lg font-semibold text-[#121481]">Total: ${totalAmount.toFixed(2)}</h3>
+                  <h3 className="text-lg font-semibold text-[#121481]">Total: ${totalAmount.toFixed(2)  || 0}</h3>
                   <button onClick={handleCheckoutClick} className="bg-pink-500 text-white px-4 py-2 rounded mt-4 hover:bg-pink-600">
                     Checkout
                   </button>
