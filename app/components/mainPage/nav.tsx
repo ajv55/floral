@@ -8,6 +8,8 @@ import { motion } from 'framer-motion';
 import { setIsOrderModalOpen } from '@/app/slices/orderSlice';
 import { FiShoppingCart } from "react-icons/fi";
 import { RootState } from '@/app/store';
+import { GiCupcake } from "react-icons/gi";
+import { alex_brush } from '@/app/font/font';
 
 const Navigation: React.FC = () => {
 
@@ -19,7 +21,7 @@ const Navigation: React.FC = () => {
 
   return (
     <div className="w-full border-b z-30 border-zinc-600 fixed bg-white flex justify-between items-center p-2">
-      <h1 className="text-3xl font-bold">Logo Goes Here</h1>
+      <div className=" flex justify-center items-center gap-3 font-bold"><GiCupcake size={30} className='text-primary-dark' /><h1 className={`${alex_brush.className} text-4xl text-primary-dark mt-2`}>Sweet Bliss Bakery</h1></div>
       <nav className="w-[45%] text-xl flex justify-evenly items-center">
         <Link className="hover:underline hover:text-red-300 underline-offset-4 hover:text-2xl" href="/" passHref>
           Home
