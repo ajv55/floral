@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import React from 'react'
 
 export default function Offer() {
@@ -30,7 +31,7 @@ export default function Offer() {
                 <h3 className="text-3xl font-bold text-gray-800">Limited Time Offer</h3>
                 <p className="mt-2 text-lg text-right text-balance text-gray-600">Get a free mini floral arrangement with every order over $50. Perfect for adding a touch of beauty to your sweet treats.</p>
                 <div className="mt-4">
-                <a href="/shop" className="inline-block rounded-md bg-gradient-to-br from-amber-300 via-pink-400 to-pink-600 px-6 py-3 text-white font-medium hover:bg-gradient-to-tr hover:from-amber-300 hover:via-pink-400 hover:to-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-300 focus:ring-offset-2">Shop Now</a>
+                <Link href="/floral" className="inline-block rounded-md bg-gradient-to-br from-amber-300 via-pink-400 to-pink-600 px-6 py-3 text-white font-medium hover:bg-gradient-to-tr hover:from-amber-300 hover:via-pink-400 hover:to-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-300 focus:ring-offset-2">Shop Now</Link>
                 </div>
                 </div>
                 

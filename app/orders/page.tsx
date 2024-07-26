@@ -4,11 +4,18 @@ import Receipt from '../components/receipt';
 import { useEffect, useState } from 'react';
 import Navigation from '../components/mainPage/nav';
 import Footer from '../components/mainPage/footer';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 
 
 const Page =  () => {
   const [orders, setOrders] = useState([]);
+
+  const {data: session} = useSession();
+  const router = useRouter();
+
+  
 
   const fetchOrders = async () => {
     await axios.get('/api/getOrders').then((res) => {
@@ -21,6 +28,9 @@ const Page =  () => {
   useEffect(() => {
     fetchOrders();
   }, [])
+
+  console.log(session)
+
 
   console.log(orders)
 
