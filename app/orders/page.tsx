@@ -10,6 +10,7 @@ import { DiVim } from 'react-icons/di';
 import Link from 'next/link';
 import { GiCupcake } from 'react-icons/gi';
 import { alex_brush } from '../font/font';
+import Analytics from '../components/analytics';
 
 
 
@@ -86,7 +87,7 @@ const Page =  () => {
     <main className="flex-1 p-8 overflow-scroll">
     
       {activeTab === 'orders' && <Receipt  orders={orders} />}
-      {activeTab === 'analytics' && <div>analytics..</div>}
+      {activeTab === 'analytics' && <Analytics orders={orders}/>}
       {activeTab === 'products' && <div>products..</div>}
     </main>
   </div>
