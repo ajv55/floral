@@ -1,8 +1,9 @@
 'use client';
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 import { format, parseISO } from 'date-fns';
+import { AnimatePresence, motion } from 'framer-motion';
 
 interface Order {
   id: string;
@@ -25,6 +26,38 @@ interface ReceiptProps {
 
 const Receipt: React.FC<ReceiptProps> = ({ orders, onCompleteOrder }) => {
   const receiptRef = useRef<HTMLDivElement>(null);
+  const [isConfirmationModalOpen, setConfirmationModalOpen] = useState(false);
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [orderToComplete, setOrderToComplete] = useState<Order | null>(null);
+
+
+  const openModal = (order: Order) => {
+    setSelectedOrder(order);
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setSelectedOrder(null);
+    setModalOpen(false);
+  };
+
+  const openConfirmationModal = (order: Order) => {
+    setOrderToComplete(order);
+    setConfirmationModalOpen(true);
+  };
+
+  const closeConfirmationModal = () => {
+    setOrderToComplete(null);
+    setConfirmationModalOpen(false);
+  };
+
+  const handleConfirmCompletion = () => {
+    if (orderToComplete && onCompleteOrder) {
+      onCompleteOrder(orderToComplete.id);
+    }
+    closeConfirmationModal();
+  };
 
   const handleGeneratePDF = () => {
     const doc = new jsPDF();
@@ -136,7 +169,7 @@ const Receipt: React.FC<ReceiptProps> = ({ orders, onCompleteOrder }) => {
             const timeString = format(dateObject, 'hh:mm:ss a');
 
             return (
-              <tr key={index} className="hover:bg-gray-100 transition duration-200">
+              <tr key={index} className="hover:bg-primary-dark hover:text-primary-light hover:font-extrabold hover:cursor-pointer transition duration-200">
                 <td className="p-3 border-b border-gray-200">{order.id}</td>
                 <td className="p-3 border-b border-gray-200">{order.buyerName}</td>
                 <td className="p-3 border-b border-gray-200">{formattedDate}</td>
@@ -151,12 +184,21 @@ const Receipt: React.FC<ReceiptProps> = ({ orders, onCompleteOrder }) => {
                     {order.status === null ? 'processing' : order.status}
                   </span>
                 </td>
-                <td className="p-3 border-b border-gray-200 text-right">
+                <td className="p-3 border-b flex flex-col gap-2 text-right">
                   <button
-                    className="ml-2 bg-gray-300 text-gray-700 font-bold py-1 px-3 rounded-lg hover:bg-gray-400 transition duration-300"
+                    onClick={() => openModal(order)}
+                    className="ml-2 bg-gray-300 text-gray-700 font-bold py-1 px-2 rounded-lg hover:bg-gray-400 transition duration-300"
                   >
-                    Mark Complete
+                    View Details
                   </button>
+                  {order.status !== 'Completed' && (
+                    <button
+                      onClick={() => openConfirmationModal(order)}
+                      className="ml-2 bg-green-500 text-white font-bold py-1 px-3 rounded-lg hover:bg-green-600 transition duration-300"
+                    >
+                      Complete Order
+                    </button>
+                  )}
                 </td>
               </tr>
             );
@@ -185,12 +227,114 @@ const Receipt: React.FC<ReceiptProps> = ({ orders, onCompleteOrder }) => {
           </div>
         ))}
       </div>
+
+      <AnimatePresence>
+        {isModalOpen && selectedOrder && <OrderModal order={selectedOrder} onClose={closeModal} />}
+        {isConfirmationModalOpen && (
+          <ConfirmationModal
+            message="Are you sure you want to mark this order as completed?"
+            onConfirm={handleConfirmCompletion}
+            onCancel={closeConfirmationModal}
+          />
+        )}
+      </AnimatePresence>
+
       <div className="flex lg:flex justify-end space-x-4 mt-6">
         <button onClick={handleGeneratePDF} className="bg-primary-pink text-white font-bold py-2 px-4 rounded-lg hover:bg-primary-dark hover:text-primary-light transition duration-300">
           Download All Receipts as PDF
         </button>
       </div>
     </div>
+  );
+};
+const OrderModal = ({ order, onClose }: { order: Order; onClose: () => void }) => {
+  return (
+    <motion.div
+      className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.3 }}
+    >
+      <motion.div
+        className="bg-white rounded-lg shadow-lg p-6 w-11/12 md:w-3/4 lg:w-1/2 relative"
+        initial={{ y: -50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        exit={{ y: 50, opacity: 0 }}
+        transition={{ duration: 0.3 }}
+      >
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition duration-300"
+        >
+          ×
+        </button>
+        <h2 className="text-2xl font-bold mb-4 text-primary-dark">Order Details</h2>
+        <p><strong>Order ID:</strong> {order.id}</p>
+        <p><strong>Name:</strong> {order.buyerName || 'N/A'}</p>
+        <p><strong>Email:</strong> {order.buyerEmail || 'N/A'}</p>
+        <p><strong>Phone:</strong> {order.buyerPhone || 'N/A'}</p>
+        <h3 className="mt-4 mb-2 text-lg font-semibold text-primary-dark">Cupcakes</h3>
+        <ul className="list-disc list-inside">
+          {order.cupcakes.map((cupcake, idx) => (
+            <li key={idx} className="mb-2">
+              <p><strong>Name:</strong> {cupcake.name}</p>
+              <p><strong>Price:</strong> ${cupcake.price.toFixed(2)}</p>
+              <p><strong>Quantity:</strong> {cupcake.quantity}</p>
+            </li>
+          ))}
+        </ul>
+        <p className="mt-4"><strong>Total Amount:</strong> ${order.totalAmount.toFixed(2)}</p>
+        <button onClick={onClose} className="mt-4 bg-primary-dark text-white font-bold py-2 px-4 rounded-lg hover:bg-primary-pink transition duration-300">
+          Close
+        </button>
+      </motion.div>
+    </motion.div>
+  );
+};
+
+const ConfirmationModal = ({
+  message,
+  onConfirm,
+  onCancel,
+}: {
+  message: string;
+  onConfirm: () => void;
+  onCancel: () => void;
+}) => {
+  return (
+    <motion.div
+      className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.3 }}
+    >
+      <motion.div
+        className="bg-white rounded-lg shadow-lg p-6 w-11/12 md:w-1/2 lg:w-1/3 relative"
+        initial={{ y: -50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        exit={{ y: 50, opacity: 0 }}
+        transition={{ duration: 0.3 }}
+      >
+        <button
+          onClick={onCancel}
+          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition duration-300"
+        >
+          ×
+        </button>
+        <h2 className="text-xl font-bold mb-4 text-primary-dark">Confirm Completion</h2>
+        <p>{message}</p>
+        <div className="flex justify-end space-x-4 mt-6">
+          <button onClick={onCancel} className="bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded-lg hover:bg-gray-400 transition duration-300">
+            Cancel
+          </button>
+          <button onClick={onConfirm} className="bg-green-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-600 transition duration-300">
+            Confirm
+          </button>
+        </div>
+      </motion.div>
+    </motion.div>
   );
 };
 

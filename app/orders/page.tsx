@@ -11,6 +11,7 @@ import Link from 'next/link';
 import { GiCupcake } from 'react-icons/gi';
 import { alex_brush } from '../font/font';
 import Analytics from '../components/analytics';
+import toast from 'react-hot-toast';
 
 
 
@@ -33,7 +34,17 @@ const Page =  () => {
 
   useEffect(() => {
     fetchOrders();
-  }, [])
+  }, []);
+
+  const updateStatus = async (id: string) => {
+
+    await axios.post('/api/completed', {id}).then((res) => {
+      if(res.status === 201){
+        toast.success('updated a order');
+        fetchOrders()
+      }
+    })
+  };
 
   console.log(session)
 
@@ -86,7 +97,7 @@ const Page =  () => {
 
     <main className="flex-1 p-8 overflow-scroll">
     
-      {activeTab === 'orders' && <Receipt  orders={orders} />}
+      {activeTab === 'orders' && <Receipt onCompleteOrder={updateStatus} orders={orders} />}
       {activeTab === 'analytics' && <Analytics orders={orders}/>}
       {activeTab === 'products' && <div>products..</div>}
     </main>
