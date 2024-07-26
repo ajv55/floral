@@ -33,6 +33,7 @@ model Order {
   buyerPhone        String?
   cupcakes          Cupcake[]
   floralArrangements FloralArrangement[]
+  status       String?   @default("processing")
   totalAmount       Float
   createdAt         DateTime           @default(now())
 }

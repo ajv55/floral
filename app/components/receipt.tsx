@@ -2,10 +2,11 @@
 import React, { useRef } from 'react';
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
-import { useReactToPrint } from 'react-to-print';
+import { format, parseISO } from 'date-fns';
 
 interface Order {
-  buyerName?: string; // Make these fields optional
+  id: string;
+  buyerName?: string;
   buyerEmail?: string;
   buyerPhone?: string;
   cupcakes: {
@@ -14,43 +15,43 @@ interface Order {
     quantity: number;
   }[];
   totalAmount: number;
+  status: string; // Added status field
 }
 
 interface ReceiptProps {
   orders: Order[];
+  onCompleteOrder?: (id: string) => void; // Function to mark order as complete
 }
 
-const Receipt: React.FC<ReceiptProps> = ({ orders }) => {
+const Receipt: React.FC<ReceiptProps> = ({ orders, onCompleteOrder }) => {
   const receiptRef = useRef<HTMLDivElement>(null);
 
   const handleGeneratePDF = () => {
     const doc = new jsPDF();
-  
-    let startY = 10; // Initial starting Y position for content
-  
+
+    let startY = 10;
+
     orders.forEach((order, index) => {
-      // Title and basic information
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(18);
+      doc.setTextColor('#121481');
       doc.text(`Receipt ${index + 1}`, doc.internal.pageSize.width / 2, startY, { align: 'center' });
-      startY += 10; // Adjust vertical spacing after title
-  
+      startY += 10;
+
       doc.setFontSize(12);
       doc.setTextColor('#333333');
       doc.text(`Name: ${order.buyerName || 'N/A'}`, 10, startY);
       doc.text(`Email: ${order.buyerEmail || 'N/A'}`, 10, startY + 10);
       doc.text(`Phone: ${order.buyerPhone || 'N/A'}`, 10, startY + 20);
-      startY += 30; // Adjust vertical spacing after basic info
-  
-      // Check if cupcakes table fits on the current page
-      const tableHeight = (order.cupcakes.length + 2) * 10; // Estimate based on rows and padding
-  
+      startY += 30;
+
+      const tableHeight = (order.cupcakes.length + 2) * 10;
+
       if (startY + tableHeight > doc.internal.pageSize.height - 20) {
-        doc.addPage(); // Add a new page if cupcakes table would overflow
-        startY = 10; // Reset startY for new page
+        doc.addPage();
+        startY = 10;
       }
-  
-      // Cupcakes table
+
       (doc as any).autoTable({
         startY,
         head: [['#', 'Name', 'Price', 'Quantity']],
@@ -64,59 +65,106 @@ const Receipt: React.FC<ReceiptProps> = ({ orders }) => {
         styles: {
           cellPadding: 5,
           fontSize: 10,
-          textColor: '#333333',
           valign: 'middle',
           halign: 'center',
-          fillStyle: 'F',
+          fillColor: '#FFEAE3',
+          textColor: '#121481',
           minCellHeight: 20,
         },
       });
-  
-      // Update startY after placing cupcakes table
+
       startY = (doc as any).lastAutoTable.finalY + 10;
-  
-      // Total amount
+
       if (startY + 30 > doc.internal.pageSize.height - 20) {
-        doc.addPage(); // Add new page if total amount would overflow
-        startY = 10; // Reset startY for new page
+        doc.addPage();
+        startY = 10;
       }
-  
+
       doc.setFont('helvetica', 'bold');
+      doc.setTextColor('#121481');
       doc.text(`Total Amount: $${order.totalAmount.toFixed(2)}`, 10, startY);
-      startY += 20; // Adjust vertical spacing after total amount
-  
-      // Footer information
+      startY += 20;
+
       if (startY + 10 > doc.internal.pageSize.height - 10) {
-        doc.addPage(); // Add new page if footer would overflow
-        startY = 10; // Reset startY for new page
+        doc.addPage();
+        startY = 10;
       }
-  
+
       doc.setFontSize(10);
       doc.setFont('helvetica', 'normal');
       doc.text('Thank you for your purchase!', 10, doc.internal.pageSize.height - 10);
-      startY = doc.internal.pageSize.height - 10; // Set startY at bottom of page for next receipt
-  
-      // Add page for each receipt except the last one
+      startY = doc.internal.pageSize.height - 10;
+
       if (index < orders.length - 1) {
         doc.addPage();
-        startY = 10; // Reset startY for new page
+        startY = 10;
       }
     });
-  
+
     doc.save('receipts.pdf');
   };
-  
-  
-
-  const handlePrint = useReactToPrint({
-    content: () => receiptRef.current,
-  });
-
-  console.log(orders)
 
   return (
-    <div>
-      <div ref={receiptRef}>
+    <div className="bg-white shadow-lg rounded-lg p-6">
+      <h3 className="text-3xl font-bold text-primary-dark mb-6">Orders</h3>
+      <div className="mb-4 flex justify-between items-center">
+        <input
+          type="text"
+          placeholder="Search by customer"
+          className="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-pink"
+        />
+        <button className="bg-primary-pink text-white font-bold py-2 px-4 rounded-lg hover:bg-primary-dark hover:text-primary-light transition duration-300">
+          New Order
+        </button>
+      </div>
+      <table className="w-full bg-white border border-gray-200 rounded-lg shadow-sm mb-6">
+        <thead>
+          <tr className="bg-primary-light text-primary-dark text-left">
+            <th className="p-3 border-b border-gray-200">Order ID</th>
+            <th className="p-3 border-b border-gray-200">Customer</th>
+            <th className="p-3 border-b border-gray-200">Date</th>
+            <th className="p-3 border-b border-gray-200">Time</th>
+            <th className="p-3 border-b border-gray-200">Total</th>
+            <th className="p-3 border-b border-gray-200">Status</th>
+            <th className="p-3 border-b border-gray-200 text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {orders.map((order: any, index) => {
+            const formattedDate = format(new Date(order?.createdAt), 'MMM d');
+            const dateObject = parseISO(order?.createdAt);
+            const timeString = format(dateObject, 'hh:mm:ss a');
+
+            return (
+              <tr key={index} className="hover:bg-gray-100 transition duration-200">
+                <td className="p-3 border-b border-gray-200">{order.id}</td>
+                <td className="p-3 border-b border-gray-200">{order.buyerName}</td>
+                <td className="p-3 border-b border-gray-200">{formattedDate}</td>
+                <td className="p-3 border-b border-gray-200">{timeString}</td>
+                <td className="p-3 border-b border-gray-200">{Math.round(order.totalAmount)}</td>
+                <td className="p-3 border-b border-gray-200">
+                  <span
+                    className={`inline-block px-3 py-1 rounded-full text-white ${
+                      order.status === 'Completed' ? 'bg-green-500' : order.status === 'Processing' ? 'bg-yellow-500' : 'bg-red-500'
+                    }`}
+                  >
+                    {order.status === null ? 'processing' : order.status}
+                  </span>
+                </td>
+                <td className="p-3 border-b border-gray-200 text-right">
+                  <button
+                    className="ml-2 bg-gray-300 text-gray-700 font-bold py-1 px-3 rounded-lg hover:bg-gray-400 transition duration-300"
+                  >
+                    Mark Complete
+                  </button>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+
+      <div ref={receiptRef} className='hidden'>
         {orders.map((order, index) => (
           <div key={index} className="p-8 bg-white rounded-lg shadow-md mb-4">
             <h2 className="text-2xl font-bold mb-4">Receipt</h2>
@@ -137,14 +185,15 @@ const Receipt: React.FC<ReceiptProps> = ({ orders }) => {
           </div>
         ))}
       </div>
-      <button onClick={handleGeneratePDF} className="mt-4 bg-pink-500 text-white py-2 px-4 rounded-lg">
-        Download All Receipts as PDF
-      </button>
-      <button onClick={handlePrint} className="mt-4 bg-amber-500 text-white py-2 px-4 rounded-lg">
-        Print All Receipts
-      </button>
+      <div className="flex lg:flex justify-end space-x-4 mt-6">
+        <button onClick={handleGeneratePDF} className="bg-primary-pink text-white font-bold py-2 px-4 rounded-lg hover:bg-primary-dark hover:text-primary-light transition duration-300">
+          Download All Receipts as PDF
+        </button>
+      </div>
     </div>
   );
 };
 
 export default Receipt;
+
+
