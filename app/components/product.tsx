@@ -87,6 +87,12 @@ const Product = () => {
     setFloralModal(true);
   };
 
+  const handlePastryDelete = (id: string) => {
+    setSelectedPastryId(id);
+    setPastryModal(true);
+  };
+
+
 
   const confirmDelete = async () => {
     if (selectedCupcakeId) {
@@ -129,6 +135,29 @@ const Product = () => {
         setFloralModal(false);
       } catch (error) {
         console.error('Error deleting floral:', error);
+      }
+    }
+  };
+
+  // pastry deletion
+  const confirmPastry = async () => {
+    if (selectedPastryId) {
+      try {
+        // Send a DELETE request to the backend
+        const response = await fetch(`/api/deletePastry?id=${selectedPastryId}`, {
+          method: 'DELETE',
+        });
+  
+        if (!response.ok) {
+          throw new Error('Failed to delete pastry');
+        }
+  
+        // Remove the cupcake from the local state
+        setPastry((prevPastry) => prevPastry.filter((pastry) => pastry.id !== selectedPastryId));
+  
+        setPastryModal(false);
+      } catch (error) {
+        console.error('Error deleting pastry:', error);
       }
     }
   };
@@ -199,6 +228,40 @@ const Product = () => {
       console.error('Error adding floral:', error);
     }
   };
+
+  // adding pastry
+  const handleAddPastry = async () => {
+    try {
+      const response = await fetch('/api/postPastry', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newPastry),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to add pastry');
+      }
+
+      const addedPastry = await response.json();
+
+      setPastry((prevPastry) => [...prevPastry, addedPastry]);
+
+      setNewPastry({
+        id: '',
+        name: '',
+        price: 0,
+        description: '',
+        img: '',
+        quantity: 0,
+      });
+
+      setAddPastryModal(false); // Close the modal after adding
+    } catch (error) {
+      console.error('Error adding pastry:', error);
+    }
+  };
   
   
   console.log(pastry)
@@ -221,7 +284,7 @@ const Product = () => {
         </button>
         <button
           className="mt-4 bg-indigo-600 text-white p-2 rounded-md"
-          onClick={() => setAddFloralModal(true)}
+          onClick={() => setAddPastryModal(true)}
         >
           Add New Pastry
         </button>
@@ -278,6 +341,31 @@ const Product = () => {
           ))}
         </ul>
       </div>
+      <div>
+        <h2 className="text-4xl mt-8 font-semibold text-indigo-800 mb-2">Pastry List</h2>
+        <ul className="space-y-4">
+          {pastry.map((p) => (
+            <li
+              key={p.id}
+              className="flex items-center justify-between p-4 border rounded-md bg-white shadow-md"
+            >
+              <div className="flex items-center space-x-4">
+                <Image width={200} height={200} src={p.image} alt={p.name} className="w-16 h-16 rounded-md" />
+                <div>
+                  <h3 className="text-lg font-semibold text-indigo-900">{p.name}</h3>
+                  <p className="text-gray-600">${p.price}</p>
+                </div>
+              </div>
+              <button
+                className="bg-red-600 text-white p-2 rounded-md"
+                onClick={() => handlePastryDelete(p.id)}
+              >
+                Delete
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
       {showModal && (
         <Modal
           title="Confirm Deletion"
@@ -297,6 +385,16 @@ const Product = () => {
                 <p>Are you sure you want to delete this cupcake?</p>
               </Modal>
             )}
+
+          {pastryModal && (
+                        <Modal
+                          title="Confirm Deletion"
+                          onConfirm={confirmPastry}
+                          onCancel={() => setPastryModal(false)}
+                        >
+                          <p>Are you sure you want to delete this cupcake?</p>
+                        </Modal>
+                      )}
 
        {addModal && (
         <Modal
@@ -383,6 +481,49 @@ const Product = () => {
                 </div>
               </Modal>
             )}
+
+    {addPastryModal && (
+                  <Modal
+                    title="Add New Pastry"
+                    onConfirm={handleAddPastry}
+                    onCancel={() => setAddPastryModal(false)}
+                  >
+                    <div className="grid  grid-cols-1 gap-4  lg:grid-cols-1">
+                      <input
+                        type="text"
+                        placeholder="Name"
+                        className="p-2 border rounded-md"
+                        value={newPastry.name}
+                        onChange={(e) => setNewPastry({ ...newPastry, name: e.target.value })}
+                      />
+                      <input
+                        type="number"
+                        placeholder="Price"
+                        className="p-2 border rounded-md"
+                        value={newPastry.price}
+                        onChange={(e) => {
+                          const value = parseFloat(e.target.value);
+                          setNewPastry({ ...newPastry, price: isNaN(value) ? 0 : value });
+                        }}
+                        min="0"
+                      />
+                      <input
+                        type="text"
+                        placeholder="Description"
+                        className="p-2 border rounded-md"
+                        value={newPastry.description}
+                        onChange={(e) => setNewPastry({ ...newPastry, description: e.target.value })}
+                      />
+                      <input
+                        type="text"
+                        placeholder="Image URL"
+                        className="p-2 border rounded-md"
+                        value={newPastry.image}
+                        onChange={(e) => setNewPastry({ ...newPastry, image: e.target.value })}
+                      />
+                    </div>
+                  </Modal>
+                )}
     </div>
   );
 };
