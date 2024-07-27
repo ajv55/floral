@@ -73,7 +73,7 @@ const CupcakeList = () => {
               <span className="text-xs font-semibold text-white bg-pink-500 px-2 py-1 rounded-full">{product.tag}</span>
               <h2 className="text-lg font-semibold text-[#121481] mt-2">{product.name}</h2>
               <p className="text-gray-600">{product.description}</p>
-              <p className="text-pink-500 font-bold">${product.price.toFixed(2)}</p>
+              <p className="text-pink-500 font-bold">${product?.price?.toFixed(2)}</p>
               <button onClick={() => dispatch(addItem(product))} className="bg-pink-500 text-white px-3 py-1 mt-2 rounded-lg hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-500">
                     Add to Cart
              </button>

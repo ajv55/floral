@@ -4,6 +4,7 @@ import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 import { format, parseISO } from 'date-fns';
 import { AnimatePresence, motion } from 'framer-motion';
+import ReceiptSkeleton from './skeleton/receiptSkeleton';
 
 interface Order {
   id: string;
@@ -22,9 +23,10 @@ interface Order {
 interface ReceiptProps {
   orders: Order[];
   onCompleteOrder?: (id: string) => void; // Function to mark order as complete
+  isLoading?: boolean
 }
 
-const Receipt: React.FC<ReceiptProps> = ({ orders, onCompleteOrder }) => {
+const Receipt: React.FC<ReceiptProps> = ({ orders, onCompleteOrder , isLoading}) => {
   const receiptRef = useRef<HTMLDivElement>(null);
   const [isConfirmationModalOpen, setConfirmationModalOpen] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
@@ -150,7 +152,8 @@ const Receipt: React.FC<ReceiptProps> = ({ orders, onCompleteOrder }) => {
           New Order
         </button>
       </div>
-      <table className="w-full bg-white border border-gray-200 rounded-lg shadow-sm mb-6">
+      {isLoading && <ReceiptSkeleton />}
+      {!isLoading && <table className="w-full bg-white border border-gray-200 rounded-lg shadow-sm mb-6">
         <thead>
           <tr className="bg-primary-light text-primary-dark text-left">
             <th className="p-3 border-b border-gray-200">Order ID</th>
@@ -204,7 +207,7 @@ const Receipt: React.FC<ReceiptProps> = ({ orders, onCompleteOrder }) => {
             );
           })}
         </tbody>
-      </table>
+      </table>}
 
       <div ref={receiptRef} className='hidden'>
         {orders.map((order, index) => (

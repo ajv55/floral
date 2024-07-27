@@ -12,12 +12,15 @@ import { GiCupcake } from 'react-icons/gi';
 import { alex_brush } from '../font/font';
 import Analytics from '../components/analytics';
 import toast from 'react-hot-toast';
+import Product from '../components/product';
+import { setLazyProp } from 'next/dist/server/api-utils';
 
 
 
 const Page =  () => {
   const [orders, setOrders] = useState([]);
   const [activeTab, setActiveTab] = useState('orders');
+  const [isLoading, setIsLoading] = useState(false);
 
   const {data: session} = useSession();
   const router = useRouter();
@@ -25,11 +28,13 @@ const Page =  () => {
   
 
   const fetchOrders = async () => {
+    setIsLoading(true)
     await axios.get('/api/getOrders').then((res) => {
         if(res.status === 201) {
             setOrders(res?.data)
         }
     })
+    setIsLoading(false)
   };
 
   useEffect(() => {
@@ -97,9 +102,9 @@ const Page =  () => {
 
     <main className="flex-1 p-8 overflow-scroll">
     
-      {activeTab === 'orders' && <Receipt onCompleteOrder={updateStatus} orders={orders} />}
+      {activeTab === 'orders' && <Receipt isLoading={isLoading} onCompleteOrder={updateStatus} orders={orders} />}
       {activeTab === 'analytics' && <Analytics orders={orders}/>}
-      {activeTab === 'products' && <div>products..</div>}
+      {activeTab === 'products' && <Product />}
     </main>
   </div>
   );
