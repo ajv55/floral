@@ -1,8 +1,20 @@
-import React from 'react'
+'use client';
+import React, { useState } from 'react'
 import Navigation from '../components/mainPage/nav'
-import Footer from '../components/mainPage/footer'
+import Footer from '../components/mainPage/footer';
+import axios from 'axios';
+
+
 
 export default function Page() {
+
+  const handleEmail = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    await axios.post('/api/send', {test: 'test@test.com'}).then((res) => {
+      console.log(res)
+    })
+  }
+
   return (
     <section className="bg-primary-light">
         <Navigation />
@@ -22,7 +34,7 @@ export default function Page() {
       {/* <!-- Contact Form --> */}
       <div className="w-full md:w-1/2 lg:w-1/2 bg-primary-light ring-2 ring-primary-dark shadow-lg rounded-lg p-8">
             <h3 className="text-4xl text-center font-bold text-primary-dark mb-6">Send Us a Message</h3>
-            <form action="#" method="POST">
+            <form onSubmit={handleEmail}>
                 <div className="mb-6">
                 <label htmlFor="name" className="block text-primary-dark text-lg font-semibold mb-2">Name</label>
                 <input

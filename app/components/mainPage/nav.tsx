@@ -10,12 +10,18 @@ import { FiShoppingCart } from "react-icons/fi";
 import { RootState } from '@/app/store';
 import { GiCupcake } from "react-icons/gi";
 import { alex_brush } from '@/app/font/font';
+import { LuLayoutDashboard } from "react-icons/lu";
+import { useSession } from 'next-auth/react';
 
 const Navigation: React.FC = () => {
 
   const cartItems = useSelector(selectCartItems);
   const dispatch = useDispatch();
   const isCartOpen = useSelector((state: RootState) => state.cart.isCartOpen);
+  const {data: session} = useSession();
+
+  console.log(session?.user.role);
+  const userRole = session?.user?.role
 
 
 
@@ -50,6 +56,7 @@ const Navigation: React.FC = () => {
             </motion.span>
           )}
         </motion.button>
+        {userRole === 'admin' && <Link href='/orders'><LuLayoutDashboard size={25} className='text-primary-dark' /></Link>}
       </nav>
       <Link href='/cupcakes' className="w-[13%] text-xl px-2 text-white rounded-2xl py-2.5 text-center bg-gradient-to-br from-pink-500 via-rose-400 to-[#121481] hover:from-[#FFEAE3] hover:via-rose-300 hover:to-pink-600">
           Place Order

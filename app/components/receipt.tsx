@@ -148,9 +148,6 @@ const Receipt: React.FC<ReceiptProps> = ({ orders, onCompleteOrder , isLoading})
           placeholder="Search by customer"
           className="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-pink"
         />
-        <button className="bg-primary-pink text-white font-bold py-2 px-4 rounded-lg hover:bg-primary-dark hover:text-primary-light transition duration-300">
-          New Order
-        </button>
       </div>
       {isLoading && <ReceiptSkeleton />}
       {!isLoading && <table className="w-full bg-white border border-gray-200 rounded-lg shadow-sm mb-6">

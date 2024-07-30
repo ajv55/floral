@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { RootState } from '@/app/store';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import { format } from 'date-fns';
 
 const Cart: React.FC = () => {
   const dispatch = useDispatch();
@@ -39,15 +40,23 @@ const Cart: React.FC = () => {
   };
 
   const postOrder = async () => {
-    await axios.post('/api/postOrder', {cartItems, totalAmount, buyer: { name, email, phone }}).then((res) => {
+    await axios.post('/api/postOrder', {cartItems, totalAmount, buyer: { name, email, phone }}).then(async (res) => {
         console.log(res)
+        const orderId = res.data.id
+        const createdAt = format(new Date(res.data.createdAt), 'MMM d yy')
+        console.log(createdAt)
         if(res.status === 201){
           toast.success('Order Placed! 🧁');
           handleCloseCart();
           dispatch(resetCart()); 
+          await axios.post('/api/send', {cartItems, totalAmount, orderId: orderId, date: createdAt , buyer: { name, email, phone }}).then((res) => {
+            console.log(res)
+          }) 
         }
     })
   };
+
+  console.log(cartItems , "buyer :" , name, email, phone, 'total: ', totalAmount )
 
   return (
     <AnimatePresence>
