@@ -23,8 +23,8 @@ export default function Floral() {
             Our florists craft stunning bouquets and arrangements using the freshest blooms.
             Ideal for gifting or adding a touch of beauty to your home or event.
             </p>
-            <div className=' h-28 flex justify-end items-end'>
-             <Link href="/floral" className="mt-4 inline-block bg-pink-600 text-white py-2 px-4 rounded hover:bg-pink-700">
+            <div className=' lg:h-28 h-20 flex justify-end items-end'>
+             <Link href="/floral" className="lg:mt-4 mt-0 inline-block bg-pink-600 text-white py-2 px-4 rounded hover:bg-pink-700">
              Browse Flowers
              </Link>
             </div>

@@ -5,7 +5,7 @@ export default function Footer() {
     <footer className=" bg-gradient-to-t from-primary-dark via-pink-600 to-pink-700 text-white py-10">
       <div className="max-w-8xl  mx-auto px-4">
         <div className="flex  flex-col md:flex-row justify-between items-center">
-          <div className="mb-6  w-[50%] md:mb-0">
+          <div className="mb-6  lg:w-[50%] w-full md:mb-0">
             <h2 className="text-2xl font-semibold mb-2">Get in Touch</h2>
             <p className="text-gray-300">Have questions or need assistance with your order? Our friendly customer service team is here to help!</p>
           </div>
