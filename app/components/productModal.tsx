@@ -13,7 +13,7 @@ const Modal: React.FC<ModalProps> = ({ title, onConfirm, onCancel, children }) =
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50">
       <motion.div
-        className="bg-white p-6 rounded-md shadow-lg w-[45%] mx-auto"
+        className="bg-white p-6 rounded-md shadow-lg lg:w-[45%] w-[95%] mx-auto"
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.8 }}

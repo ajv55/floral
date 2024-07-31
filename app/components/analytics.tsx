@@ -103,11 +103,11 @@ const Analytics: React.FC<AnalyticsProps> = ({ orders }) => {
   };
 
   return (
-    <div className="bg-white shadow-lg rounded-lg p-6">
+    <div className="bg-white overflow-scroll shadow-lg rounded-lg p-6">
       <h2 className="text-3xl font-bold text-primary-dark mb-6">Analytics</h2>
       <div className="flex flex-col  justify-center items-center gap-3">
         {/* Popular Items Bar Chart */}
-        <div className="bg-white w-[90%] ring-2 ring-primary-dark p-4 rounded-lg shadow-md">
+        <div className="bg-white lg:w-[90%] w-full ring-2 ring-primary-dark p-4 rounded-lg shadow-md">
         <h2 className="text-xl font-semibold">Revenue Over Time</h2>
         <Line
           data={getRevenueOverTimeData()}
@@ -126,7 +126,7 @@ const Analytics: React.FC<AnalyticsProps> = ({ orders }) => {
           }}
         />
       </div>
-      <div className="bg-white w-[90%] ring-2 ring-primary-dark p-4 rounded-lg shadow-md">
+      <div className="bg-white lg:w-[90%] w-full ring-2 ring-primary-dark p-4 rounded-lg shadow-md">
         <h2 className="text-xl font-semibold">Order Volume by Day of Week</h2>
         <Bar
           data={getOrderVolumeByDayData()}
@@ -145,7 +145,7 @@ const Analytics: React.FC<AnalyticsProps> = ({ orders }) => {
           }}
         />
       </div>
-        <div className="bg-white w-[90%] ring-2 ring-primary-dark p-4 rounded-lg shadow-md">
+        <div className="bg-white lg:w-[90%] w-full  ring-2 ring-primary-dark p-4 rounded-lg shadow-md">
           <h3 className="text-2xl font-semibold mb-4">Popular Items</h3>
           <Bar
             data={popularItemsData}
@@ -166,7 +166,7 @@ const Analytics: React.FC<AnalyticsProps> = ({ orders }) => {
         </div>
 
         {/* Total Sales Doughnut Chart */}
-        <div className="bg-white w-[90%]  ring-2 ring-primary-dark p-4 rounded-lg shadow-md">
+        <div className="bg-white lg:w-[90%] w-full   ring-2 ring-primary-dark p-4 rounded-lg shadow-md">
           <h3 className="text-2xl font-semibold mb-4">Sales Breakdown</h3>
           <Doughnut
             data={{

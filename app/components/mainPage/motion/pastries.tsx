@@ -23,8 +23,8 @@ export default function Pastries() {
             Freshly baked daily, our pastries range from flaky croissants and Danish pastries to rich tarts and éclairs.
             Perfect for breakfast, a coffee break, or dessert.
             </p>
-            <div className=' h-28 flex justify-end items-end'>
-              <Link href="/pastries" className="mt-4 inline-block bg-pink-600 text-white py-2 px-4 rounded hover:bg-pink-700">
+            <div className=' lg:h-28 h-20 flex justify-end items-end'>
+              <Link href="/pastries" className="mt-4  inline-block bg-pink-600 text-white py-2 px-4 rounded hover:bg-pink-700">
               Shop Pastries
               </Link>
             </div>

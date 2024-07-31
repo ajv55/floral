@@ -1,5 +1,5 @@
 'use client';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 import { format, parseISO } from 'date-fns';
@@ -33,6 +33,23 @@ const Receipt: React.FC<ReceiptProps> = ({ orders, onCompleteOrder , isLoading})
   const [isModalOpen, setModalOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [orderToComplete, setOrderToComplete] = useState<Order | null>(null);
+
+    // State for the search query and filtered orders
+    const [searchQuery, setSearchQuery] = useState('');
+    const [filteredOrders, setFilteredOrders] = useState(orders);
+
+     // Effect to filter orders based on search query
+  useEffect(() => {
+    if (searchQuery === '') {
+      setFilteredOrders(orders); // Reset to original orders if query is empty
+    } else {
+      const lowercasedQuery = searchQuery.toLowerCase();
+      const filtered = orders.filter((order: any) =>
+        order?.buyerName.toLowerCase().includes(lowercasedQuery)
+      );
+      setFilteredOrders(filtered);
+    }
+  }, [searchQuery, orders]);
 
 
   const openModal = (order: Order) => {
@@ -161,18 +178,22 @@ const Receipt: React.FC<ReceiptProps> = ({ orders, onCompleteOrder , isLoading})
     doc.save('receipts.pdf');
   };
 
+  console.log(filteredOrders)
+
   return (
-    <div className="bg-white shadow-lg rounded-lg p-6">
+    <div className="bg-white overflow-scroll lg:w-full w-full shadow-lg rounded-lg p-6">
       <h3 className="text-3xl font-bold text-primary-dark mb-6">Orders</h3>
       <div className="mb-4 flex justify-between items-center">
         <input
           type="text"
           placeholder="Search by customer"
           className="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-pink"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)} // Update search query state
         />
       </div>
       {isLoading && <ReceiptSkeleton />}
-      {!isLoading && <table className="w-full bg-white border border-gray-200 rounded-lg shadow-sm mb-6">
+      {!isLoading && <table className="w-full  bg-white border border-primary-dark rounded-lg shadow-sm mb-6">
         <thead>
           <tr className="bg-primary-light text-primary-dark text-left">
             <th className="p-3 border-b border-gray-200">Order ID</th>
@@ -185,7 +206,7 @@ const Receipt: React.FC<ReceiptProps> = ({ orders, onCompleteOrder , isLoading})
           </tr>
         </thead>
         <tbody>
-          {orders.map((order: any, index) => {
+          {filteredOrders.map((order: any, index) => {
             const formattedDate = format(new Date(order?.createdAt), 'MMM d');
             const dateObject = parseISO(order?.createdAt);
             const timeString = format(dateObject, 'hh:mm:ss a');

@@ -25,18 +25,18 @@ const AboutPage = () => {
         </section>
 
         {/* Our Story Section */}
-        <section className="mb-12 max-w-4xl mx-auto">
-          <h2 className="text-6xl font-bold bg-gradient-to-br from-primary-pink to-primary-dark bg-clip-text text-transparent  mb-4">Our Story</h2>
-          <p className="text-xl text-gray-600 leading-relaxed">
+        <section className="mb-12 lg:max-w-4xl w-full mx-auto">
+          <h2 className="text-6xl text-center lg:text-left font-bold bg-gradient-to-br from-primary-pink to-primary-dark bg-clip-text text-transparent  mb-4">Our Story</h2>
+          <p className="text-xl text-center lg:text-left lg:p-0 p-1 text-gray-600 leading-relaxed">
             Founded in 2020, Sweet Bliss Bakery began as a small family-owned shop with a big dream: to bring joy to our community through the magic of baked goods. Our passion for baking and our commitment to quality have allowed us to grow, but our core values remain the same. We believe in using the finest ingredients, traditional recipes, and a lot of love in everything we create.
           </p>
         </section>
 
         {/* Our Values Section  */}
-        <section className=" w-full flex ">
-            <div className='w-1/2 h-[26rem] rounded-r-lg bg-center bg-cover' style={{backgroundImage: 'linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url("https://data.thefeedfeed.com/recommended/post_3885585.jpeg")'}}>
+        <section className=" w-full flex lg:flex-row flex-col ">
+            <div className='lg:w-1/2 w-full h-[26rem] rounded-r-lg bg-center bg-cover' style={{backgroundImage: 'linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url("https://data.thefeedfeed.com/recommended/post_3885585.jpeg")'}}>
             </div>
-            <div className='w-1/2 flex p-4 flex-col justify-center items-center gap-2'>
+            <div className='lg:w-1/2 w-full flex p-4 flex-col justify-center items-center gap-2'>
             <h2 className="text-5xl font-bold text-primary-dark mb-4">Our Values</h2>
             <ul className="text-lg text-primary-dark leading-relaxed list-disc pl-5 space-y-4">
                 <li>
@@ -57,8 +57,8 @@ const AboutPage = () => {
 
 
         {/* Our Offerings Section */}
-        <section className="mb-12 flex justify-center items-center">
-          <div className='w-1/2 flex flex-col justify-center items-center p-4'>
+        <section className="mb-12 flex lg:flex-row flex-col justify-center items-center">
+          <div className='lg:w-1/2 w-full flex flex-col justify-center items-center p-4'>
           <h2 className="text-5xl font-bold text-primary-dark mb-4">Our Offerings</h2>
             <p className="text-xl text-primary-dark leading-relaxed">
                 At Sweet Bliss Bakery, we offer a wide range of baked goods, including:
@@ -72,7 +72,7 @@ const AboutPage = () => {
                 <li><span className="text-primary-pink font-semibold">And much more!</span> Explore our full range of products.</li>
             </ul>
           </div>
-          <div className='w-1/2 h-[26rem] rounded-l-lg bg-center bg-cover' style={{backgroundImage: 'linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url("https://hips.hearstapps.com/hmg-prod/images/closeup-jpg-1614830517.jpg")'}}>
+          <div className='lg:w-1/2 w-full h-[26rem] rounded-l-lg bg-center bg-cover' style={{backgroundImage: 'linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url("https://hips.hearstapps.com/hmg-prod/images/closeup-jpg-1614830517.jpg")'}}>
             </div>
         </section>
 
