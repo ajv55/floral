@@ -5,7 +5,7 @@ import 'jspdf-autotable';
 import { format, parseISO } from 'date-fns';
 import { AnimatePresence, motion } from 'framer-motion';
 import ReceiptSkeleton from './skeleton/receiptSkeleton';
-import Resume from './resume';
+import html2canvas from 'html2canvas'
 
 interface Order {
   id: string;
@@ -83,22 +83,43 @@ const Receipt: React.FC<ReceiptProps> = ({ orders, onCompleteOrder , isLoading})
 
   const generatePDF = () => {
     if (resumeRef.current) {
-      const doc = new jsPDF({
-        orientation: 'portrait',
-        unit: 'pt',
-        format: 'a4',
-      });
-
-      doc.html(resumeRef.current, {
-        callback: (doc) => {
-          doc.save('resume.pdf');
-        },
-        margin: [10, 10, 10, 10],
-        x: 10,
-        y: 10,
+      html2canvas(resumeRef.current, { scale: 2 }).then((canvas) => {
+        const imgData = canvas.toDataURL('image/png');
+        const doc = new jsPDF({
+          orientation: 'portrait',
+          unit: 'pt',
+          format: 'a4',
+        });
+  
+        // Define margins
+        const margin = 8; // Margin size in points
+        const pdfWidth = 595.28; // A4 width in points
+        const pdfHeight = 841.89; // A4 height in points
+  
+        // Calculate image dimensions and position
+        const imgWidth = canvas.width;
+        const imgHeight = canvas.height;
+  
+        // Calculate scaling factor to ensure the image fits within the page dimensions minus margins
+        const scaleWidth = (pdfWidth - 2 * margin) / imgWidth;
+        const scaleHeight = (pdfHeight - 2 * margin) / imgHeight;
+        const scaleFactor = Math.min(scaleWidth, scaleHeight);
+  
+        // Calculate final dimensions of the image
+        const finalWidth = imgWidth * scaleFactor;
+        const finalHeight = imgHeight * scaleFactor;
+  
+        // Center the image on the page with margins
+        const xOffset = (pdfWidth - finalWidth) / 2;
+        const yOffset = (pdfHeight - finalHeight) / 2;
+  
+        // Add image with margins
+        doc.addImage(imgData, 'PNG', xOffset, yOffset, finalWidth, finalHeight);
+        doc.save(`Abel's-Resume.pdf`);
       });
     }
   };
+
 
   const handleGeneratePDF = () => {
     const doc = new jsPDF();
@@ -290,18 +311,7 @@ const Receipt: React.FC<ReceiptProps> = ({ orders, onCompleteOrder , isLoading})
 
       {/* resume here just till i get it done then delete the code lol */}
 
-      {/* <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Download My Resume</h1>
-      <div ref={resumeRef}>
-        <Resume />
-      </div>
-      <button
-        onClick={generatePDF}
-        className="mt-4 bg-blue-500 text-white py-2 px-4 rounded"
-      >
-        Download PDF
-      </button>
-    </div> */}
+      
 
     </div>
   );
@@ -335,7 +345,7 @@ const OrderModal = ({ order, onClose }: { order: Order; onClose: () => void }) =
         <p><strong>Phone:</strong> {order.buyerPhone || 'N/A'}</p>
         <h3 className="mt-4 mb-2 text-lg font-semibold text-primary-dark">Cupcakes</h3>
         <ul className="list-disc list-inside">
-          {order.cupcakes.map((cupcake, idx) => (
+          {order?.cupcakes?.map((cupcake, idx) => (
             <li key={idx} className="mb-2">
               <p><strong>Name:</strong> {cupcake.name}</p>
               <p><strong>Price:</strong> ${cupcake.price.toFixed(2)}</p>

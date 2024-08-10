@@ -76,7 +76,7 @@ const Page =  () => {
           <li>
             <button
               className={`text-2xl  font-medium w-full text-left ${activeTab === 'orders' ? 'text-primary-pink' : 'text-white'}`}
-              onClick={() => setActiveTab('orders')}
+              onClick={() => {setActiveTab('orders'); setIsOpen(!isOpen)}}
             >
               Orders
             </button>
@@ -84,7 +84,7 @@ const Page =  () => {
           <li>
             <button
               className={`text-2xl font-medium w-full text-left ${activeTab === 'analytics' ? 'text-primary-pink' : 'text-white'}`}
-              onClick={() => setActiveTab('analytics')}
+              onClick={() => {setActiveTab('analytics'); setIsOpen(!isOpen)}}
             >
               Analytics
             </button>
@@ -92,7 +92,7 @@ const Page =  () => {
           <li>
             <button
               className={`text-2xl font-medium w-full text-left ${activeTab === 'products' ? 'text-primary-pink' : 'text-white'}`}
-              onClick={() => setActiveTab('products')}
+              onClick={() => {setActiveTab('products'); setIsOpen(!isOpen)}}
             >
               Products
             </button>

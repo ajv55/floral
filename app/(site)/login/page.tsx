@@ -49,10 +49,10 @@ export default function Page() {
     console.log(session?.user.role)
 
   return (
-    <div className={`${style.background} min-h-screen flex items-center justify-center bg-gray-100 py-12 px-4 sm:px-6 lg:px-8`}>
+    <div className={`${style.background}  min-h-screen flex items-center justify-center bg-primary-light py-12 px-4 sm:px-6 lg:px-8`}>
     <div className="max-w-lg w-full space-y-8">
       <div>
-        <h2 className="mt-6 text-center lg:text-5xl text-3xl leading-12 font-extrabold text-indigo-600">
+        <h2 className="mt-6 text-center lg:text-5xl text-3xl leading-12 font-extrabold text-primary-dark">
           Sign in to your account
         </h2>
       </div>
@@ -95,7 +95,7 @@ export default function Page() {
               id="remember_me"
               name="remember_me"
               type="checkbox"
-              className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+              className="h-4 w-4 text-primary-dark focus:ring-primary-dark border-gray-300 rounded"
             />
             <label htmlFor="remember_me" className="ml-2 block text-sm leading-5 text-gray-900">
               Remember me
@@ -103,7 +103,7 @@ export default function Page() {
           </div>
 
           <div className="text-sm leading-5">
-            <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
+            <a href="#" className="font-medium text-primary-dark hover:text-primary-dark">
               Forgot your password?
             </a>
           </div>
@@ -112,7 +112,7 @@ export default function Page() {
         <div>
           <button
             type="submit"
-            className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-xl font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-xl font-medium rounded-md text-primary-dark bg-primary-pink hover:bg-primary-pink focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-pink"
           >
             Sign In
           </button>

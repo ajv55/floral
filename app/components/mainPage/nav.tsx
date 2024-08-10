@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectCartItems, setIsCartOpen } from '../../slices/cartSlice';
@@ -16,11 +16,19 @@ import { RiMenu3Line } from "react-icons/ri";
 
 const Navigation: React.FC = () => {
 
+
   const cartItems = useSelector(selectCartItems);
   const dispatch = useDispatch();
   const isCartOpen = useSelector((state: RootState) => state.cart.isCartOpen);
   const {data: session} = useSession();
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    if(session) {
+      return setIsLoggedIn(true)
+    }
+  }, [])
 
   console.log(session?.user.role);
   const userRole = session?.user?.role
@@ -28,7 +36,7 @@ const Navigation: React.FC = () => {
 
 
   return (
-    <div className="w-full border-b  z-30 border-zinc-600 fixed bg-white flex justify-between items-center p-2">
+    <div className="w-full border-b  z-30 border-primary-dark lg:fixed static bg-white flex justify-between items-center p-2">
        <AnimatePresence>
           {isOpen && (
                     <motion.div
@@ -40,19 +48,23 @@ const Navigation: React.FC = () => {
                     >
                        <div className=" flex justify-center items-center gap-3 font-bold"><GiCupcake size={30} className='text-primary-light' /><h1 className={`${alex_brush.className} lg:text-4xl text-3xl text-primary-pink mt-2`}>Sweet Bliss Bakery</h1></div>
                         <nav className="flex flex-col p-4 space-y-14">
-                            <Link onClick={() => setIsOpen(!isOpen)} className="text-2xl font-semibold text-white  hover:text-teal-500" href="/">
+                            <Link onClick={() => setIsOpen(!isOpen)} className="text-2xl font-semibold text-white  hover:text-primary-pink" href="/">
                             Home
                             </Link>
-                            <Link onClick={() => setIsOpen(false)} className="text-2xl font-semibold text-white  hover:text-teal-500" href="/about">
+                            <Link onClick={() => setIsOpen(false)} className="text-2xl font-semibold text-white  hover:text-primary-pink" href="/about">
                             About
                             </Link>
-                            <Link onClick={() => setIsOpen(false)} className="text-2xl font-semibold text-white  hover:text-teal-500" href="/cupcakes">
+                            <Link onClick={() => setIsOpen(false)} className="text-2xl font-semibold text-white  hover:text-primary-pink" href="/cupcakes">
                             Cupackes
                             </Link>
-                            <Link onClick={() => setIsOpen(false)} className="text-2xl font-semibold text-white  hover:text-teal-500" href="/contact">
+                            <Link onClick={() => setIsOpen(false)} className="text-2xl font-semibold text-white  hover:text-primary-pink" href="/contact">
                             Contact
                             </Link>
                         </nav>
+
+                        <div>
+                          {isLoggedIn ? <Link onClick={() => setIsOpen(false)} className="text-2xl font-semibold p-4 text-white  hover:text-primary-pink" href='/signOut'>Logout</Link> : <Link onClick={() => setIsOpen(false)} className="text-2xl font-semibold p-4 text-white  hover:text-primary-pink" href='/login'>Login</Link>}
+                        </div>
 
                         <div className=' lg:w-full lg:mt-0 p-1 w-[97%] h-[4rem] flex justify-center items-center'>
                             <p className='text-sm self-end text-white  text-center lg:text-right'>Copyright © 2024 Sweet Bliss Bakery. All rights reserved.</p>
@@ -60,14 +72,16 @@ const Navigation: React.FC = () => {
                     </motion.div>
                 )}
       </AnimatePresence>
-      <div className=" flex justify-center items-center gap-3 font-bold"><GiCupcake size={30} className='text-primary-dark' /><h1 className={`${alex_brush.className} lg:text-4xl text-lg text-primary-dark mt-2`}>Sweet Bliss Bakery</h1></div>
+      <div className=" flex  justify-center items-center gap-3 font-bold"><GiCupcake size={30} className='text-primary-dark' /><h1 className={`${alex_brush.className} lg:text-4xl text-lg text-primary-dark mt-2`}>Sweet Bliss Bakery</h1></div>
+      
+      <div className=' flex items-center gap-5'>
       <motion.button
           className="relative"
           onClick={() => dispatch(setIsCartOpen(!isCartOpen))}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
         >
-          <FiShoppingCart size={25} />
+          <FiShoppingCart size={25} className='text-primary-dark'/>
           {cartItems.length > 0 && (
             <motion.span
               className="absolute -top-2 -right-2 bg-red-500 text-white px-2 py-1 rounded-full text-xs"
@@ -80,7 +94,6 @@ const Navigation: React.FC = () => {
           )}
         </motion.button>
         {userRole === 'admin' && <Link href='/orders'><LuLayoutDashboard size={25} className='text-primary-dark' /></Link>}
-      <div>
         <RiMenu3Line size={30} onClick={() => setIsOpen(!isOpen)} className='text-primary-dark lg:hidden block' />
       </div>
       <nav className="w-[45%] text-xl lg:flex hidden justify-evenly items-center">
